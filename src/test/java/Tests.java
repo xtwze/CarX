@@ -1,91 +1,92 @@
-import org.junit.Test;
+import org.example.*;
+import org.example.Car;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Tests {
     @Test
-    void testRegisterUser() {
-        // РџРѕРґРіРѕС‚РѕРІРєР° РґР°РЅРЅС‹С…
+    public void testRegisterUser() {
+        // Подготовка данных
         CarRentalSystem system = new CarRentalSystem();
         String userId = "U1";
         String userName = "Test User";
         String driverLicense = "DL123456";
         double initialRate = 5.0;
 
-        // Р’С‹РїРѕР»РЅРµРЅРёРµ
+        // Выполнение
         system.registerUser(userId, userName, driverLicense, initialRate);
         User registeredUser = system.getUser(userId);
 
-        // РџСЂРѕРІРµСЂРєРё
-        assertNotNull(registeredUser, "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ");
-        assertEquals(userId, registeredUser.getId(), "ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ");
-        assertEquals(userName, registeredUser.getName(), "РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ");
-        assertEquals(driverLicense, registeredUser.getDriverLicense(), "РќРѕРјРµСЂ РїСЂР°РІ РґРѕР»Р¶РµРЅ СЃРѕРІРїР°РґР°С‚СЊ");
-        assertEquals(initialRate, registeredUser.getRate(), 0.001, "Р РµР№С‚РёРЅРі РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓСЃС‚Р°РЅРѕРІР»РµРЅ");
+        // Проверки
+        assertNotNull(registeredUser, "Пользователь должен быть зарегистрирован");
+        assertEquals(userId, registeredUser.getId(), "ID пользователя должно совпадать");
+        assertEquals(userName, registeredUser.getName(), "Имя пользователя должно совпадать");
+        assertEquals(driverLicense, registeredUser.getDriverLicense(), "Номер прав должен совпадать");
+        assertEquals(initialRate, registeredUser.getRate(), 0.001, "Рейтинг должен быть установлен");
     }
 
 
     @Test
-    void testAddCar() {
-        // РџРѕРґРіРѕС‚РѕРІРєР°
+    public void testAddCar() {
+        // Подготовка
         CarRentalSystem system = new CarRentalSystem();
-        Car car = new Car("C1", "Toyota Camry", "РєРѕРјС„РѕСЂС‚", 0);
+        Car car = new Car("C1", "Toyota Camry", "комфорт", 0);
 
-        // Р’С‹РїРѕР»РЅРµРЅРёРµ
+        // Выполнение
         system.addCar(car);
 
-        // РџСЂРѕРІРµСЂРєРё
-        assertEquals(15.0, car.getPricePerMinute(), 0.001, "Р¦РµРЅР° РґР»СЏ 'РєРѕРјС„РѕСЂС‚' РґРѕР»Р¶РЅР° Р±С‹С‚СЊ 15 СЂСѓР±/РјРёРЅ");
-        assertTrue(system.getCar("C1") != null, "РђРІС‚РѕРјРѕР±РёР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅ РІ СЃРёСЃС‚РµРјСѓ");
+        // Проверки
+        assertTrue(system.getCar("C1") != null, "Автомобиль должен быть добавлен в систему");
     }
 
 
     @Test
-    void testRentCar() {
-        // РџРѕРґРіРѕС‚РѕРІРєР°
+    public void testRentCar() {
+        // Подготовка
         CarRentalSystem system = new CarRentalSystem();
-        system.registerUser("U1", "РРІР°РЅ", "DL111", 5.0);
-        system.addCar(new Car("C1", "Kia Rio", "СЌРєРѕРЅРѕРј", 0));
+        system.registerUser("U1", "Иван", "DL111", 5.0);
+        system.addCar(new Car("C1", "Kia Rio", "эконом", 0));
         int minutes = 180;
 
-        // Р’С‹РїРѕР»РЅРµРЅРёРµ
+        // Выполнение
         Rental rental = system.rentCar("U1", "C1", minutes);
 
-        // РџСЂРѕРІРµСЂРєРё
-        assertNotNull(rental, "Р”РѕР»Р¶РµРЅ РІРµСЂРЅСѓС‚СЊСЃСЏ РѕР±СЉРµРєС‚ Р°СЂРµРЅРґС‹");
-        assertEquals("U1", rental.getUser().getId(), "ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ");
-        assertEquals("C1", rental.getCar().getId(), "ID Р°РІС‚РѕРјРѕР±РёР»СЏ РґРѕР»Р¶РЅРѕ СЃРѕРІРїР°РґР°С‚СЊ");
-        assertEquals(minutes, rental.getMinutes(), "Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ Р°СЂРµРЅРґС‹ РґРѕР»Р¶РЅР° СЃРѕРІРїР°РґР°С‚СЊ");
-        assertFalse(rental.getCar().isAvailable(), "РђРІС‚РѕРјРѕР±РёР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРѕРјРµС‡РµРЅ РєР°Рє Р·Р°РЅСЏС‚С‹Р№");
+        // Проверки
+        assertNotNull(rental, "Должен вернуться объект аренды");
+        assertEquals("U1", rental.getUser().getId(), "ID пользователя должно совпадать");
+        assertEquals("C1", rental.getCar().getId(), "ID автомобиля должно совпадать");
+        assertEquals(minutes, rental.getMinutes(), "Длительность аренды должна совпадать");
+        assertFalse(rental.getCar().isAvailable(), "Автомобиль должен быть помечен как занятый");
     }
     @Test
-    void testCompleteRental() {
-        // РџРѕРґРіРѕС‚РѕРІРєР°
+    public void testCompleteRental() {
+        // Подготовка
         CarRentalSystem system = new CarRentalSystem();
-        system.registerUser("U1", "РџРµС‚СЂ", "DL222", 6.0);
-        system.addCar(new Car("C1", "Hyundai Solaris", "СЌРєРѕРЅРѕРј", 0));
+        system.registerUser("U1", "Петр", "DL222", 6.0);
+        system.addCar(new Car("C1", "Hyundai Solaris", "эконом", 0));
         Rental rental = system.rentCar("U1", "C1", 120);
         int mileage = 85;
         boolean hasViolations = false;
 
-        // Р’С‹РїРѕР»РЅРµРЅРёРµ
+        // Выполнение
         system.completeRental(rental, mileage, hasViolations);
 
-        // РџСЂРѕРІРµСЂРєРё
-        assertTrue(rental.getCar().isAvailable(), "РђРІС‚РѕРјРѕР±РёР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРЅРѕРІР° РґРѕСЃС‚СѓРїРµРЅ");
-        assertEquals(6.5, rental.getUser().getRate(), 0.001, "Р РµР№С‚РёРЅРі РґРѕР»Р¶РµРЅ СѓРІРµР»РёС‡РёС‚СЊСЃСЏ РЅР° 0.5");
+        // Проверки
+        assertTrue(rental.getCar().isAvailable(), "Автомобиль должен быть снова доступен");
+        assertEquals(6.5, rental.getUser().getRate(), 0.001, "Рейтинг должен увеличиться на 0.5");
     }
     @Test
-    void testGetTotalCost() {
-        // РџРѕРґРіРѕС‚РѕРІРєР°
-        User user = new User("U1", "РћР»СЊРіР°", 8.0, "DL333");
-        Car car = new Car("C1", "BMW X5", "РїСЂРµРјРёСѓРј", 30.0);
+    public void testGetTotalCost() {
+        // Подготовка
+        User user = new User("U1", "Ольга", 8.0, "DL333");
+        Car car = new Car("C1", "BMW X5", "премиум", 30.0);
         int minutes = 90;
         Rental rental = new Rental(user, car, minutes);
 
-        // Р’С‹РїРѕР»РЅРµРЅРёРµ Рё РїСЂРѕРІРµСЂРєР°
+        // Выполнение и проверка
         assertEquals(2295.0, rental.getTotalCost(), 0.001,
-                "РЎС‚РѕРёРјРѕСЃС‚СЊ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ 30*90*0.85 (15% СЃРєРёРґРєР° Р·Р° СЂРµР№С‚РёРЅРі 8.0)");
+                "Стоимость должна быть 30*90*0.85 (15% скидка за рейтинг 8.0)");
     }
 
 }

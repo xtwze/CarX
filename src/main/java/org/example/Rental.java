@@ -1,3 +1,5 @@
+package org.example;
+
 public class Rental {
     private User user;
     private Car car;
